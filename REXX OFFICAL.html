@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REXX V5 - Bug WhatsApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #25D366;
+            --secondary: #128C7E;
+            --dark: #075E54;
+            --light: #DCF8C6;
+            --danger: #FF4757;
+            --warning: #FFA502;
+            --success: #2ED573;
+            --dark-bg: #0c0c0c;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border: #333333;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-bg) 100%);
+            padding: 20px;
+        }
+
+        .login-box {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+        }
+
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .login-footer {
+            margin-top: 25px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--card-bg);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-logo {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .brand-text h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .brand-text p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .role-owner {
+            background-color: var(--danger);
+        }
+
+        .role-reseller {
+            background-color: var(--warning);
+        }
+
+        .role-member {
+            background-color: var(--text-secondary);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border);
+            margin: 20px 0;
+        }
+
+        .dashboard-content {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: rgba(37, 211, 102, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .menu-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-text {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .main-content {
+            flex: 1;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-icon {
+            font-size: 1.5rem;
+        }
+
+        .bug-form {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .bug-center {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .bug-logo {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Coming Soon Page */
+        .coming-soon {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .coming-soon-icon {
+            font-size: 4rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .coming-soon h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .coming-soon p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .user-info {
+                flex-direction: column;
+            }
+
+            .user-details {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <div class="logo">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <h1 class="login-title">REXX V5</h1>
+            <p class="login-subtitle">Bug WhatsApp Dashboard</p>
+            
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan username Anda">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Masukkan password Anda">
+            </div>
+            
+            <button class="login-btn" id="loginButton">LOGIN</button>
+            
+            <div class="login-footer">
+                <p>Gunakan username khusus untuk akses role tertentu</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard-container" id="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>REXX V5</h1>
+                    <p>Bug WhatsApp Dashboard</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">R</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Rexx</div>
+                    <div class="user-role role-owner" id="userRole">Owner</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="divider"></div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Sidebar Menu -->
+            <div class="sidebar">
+                <div class="menu-item active" data-page="bug">
+                    <div class="menu-icon">🐞</div>
+                    <div class="menu-text">Bug WhatsApp</div>
+                </div>
+                <div class="menu-item" data-page="comingSoon">
+                    <div class="menu-icon">⚙️</div>
+                    <div class="menu-text">Coming Soon</div>
+                </div>
+                <div class="menu-item" data-page="userManagement" id="userManagementMenu">
+                    <div class="menu-icon"><i class="fas fa-users"></i></div>
+                    <div class="menu-text">User Management</div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Bug WhatsApp Page -->
+                <div class="page-content active" id="bugPage">
+                    <h2 class="content-title">
+                        <span class="content-icon">🐞</span>
+                        Bug WhatsApp
+                    </h2>
+                    
+                    <div class="bug-center">
+                        <div class="bug-logo">🐞</div>
+                    </div>
+                    
+                    <div class="bug-form">
+                        <div class="form-group">
+                            <label for="phoneNumber">Nomor WhatsApp</label>
+                            <input type="text" class="form-control" id="phoneNumber" placeholder="Contoh: 0827662772">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bugType">Tipe Bug</label>
+                            <select class="form-control" id="bugType">
+                                <option value="crash">Crash</option>
+                                <option value="forclose">Forclose</option>
+                                <option value="xkill-android">Xkill Android</option>
+                                <option value="skill-ios">Skill iOS</option>
+                                <option value="delay">Delay</option>
+                                <option value="blank">Blank</option>
+                                <option value="restart">Restart</option>
+                            </select>
+                        </div>
+                        
+                        <div class="bug-center">
+                            <button class="btn-submit" id="submitBug">
+                                <span>BUG</span>
+                                <span>🐞</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coming Soon Page -->
+                <div class="page-content" id="comingSoonPage">
+                    <div class="coming-soon">
+                        <div class="coming-soon-icon">⚙️</div>
+                        <h2>Coming Soon</h2>
+                        <p>Fitur ini sedang dalam pengembangan</p>
+                        <p>Akan segera hadir di versi mendatang</p>
+                    </div>
+                </div>
+
+                <!-- User Management Page -->
+                <div class="page-content" id="userManagementPage">
+                    <h2 class="content-title">
+                        <span class="content-icon"><i class="fas fa-users"></i></span>
+                        User Management
+                    </h2>
+                    
+                    <div class="bug-form">
+                        <div class="form-group">
+                            <label for="newUsername">Username Baru</label>
+                            <input type="text" class="form-control" id="newUsername" placeholder="Masukkan username baru">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword">Password Baru</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="Masukkan password baru">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newRole">Role</label>
+                            <select class="form-control" id="newRole">
+                                <option value="member">Member</option>
+                                <option value="reseller">Reseller</option>
+                            </select>
+                        </div>
+                        
+                        <div class="bug-center">
+                            <button class="btn-submit" id="addUser">
+                                <span>TAMBAH USER</span>
+                                <span><i class="fas fa-user-plus"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="user-list" id="userList">
+                        <!-- Daftar user akan ditampilkan di sini -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data user dan role
+        const users = [
+            { username: 'rexx', password: 'rexx123', role: 'owner', displayName: 'Rexx' },
+            { username: 'puzt', password: 'puzt123', role: 'owner', displayName: 'Puzt' },
+            { username: 'rendz', password: 'rendz123', role: 'reseller', displayName: 'Rendz' },
+            { username: 'user1', password: 'user123', role: 'member', displayName: 'User 1' }
+        ];
+
+        // Data user yang ditambahkan oleh reseller
+        let addedUsers = [];
+
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const dashboard = document.getElementById('dashboard');
+        const loginButton = document.getElementById('loginButton');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const userAvatar = document.getElementById('userAvatar');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const pageContents = document.querySelectorAll('.page-content');
+        const bugTypeSelect = document.getElementById('bugType');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const submitBugButton = document.getElementById('submitBug');
+        const userManagementMenu = document.getElementById('userManagementMenu');
+        const userManagementPage = document.getElementById('userManagementPage');
+        const addUserButton = document.getElementById('addUser');
+        const userList = document.getElementById('userList');
+
+        // User yang sedang login
+        let currentUser = null;
+
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message, type = 'info') {
+            // Hapus notifikasi sebelumnya
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background-color: ${type === 'success' ? '#25D366' : type === 'error' ? '#FF4757' : '#1a1a1a'};
+                color: white;
+                border-radius: 8px;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+
+            // Hapus setelah 3 detik
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+
+            // Tambahkan animasi CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Fungsi untuk menentukan role berdasarkan username
+        function getUserRole(username) {
+            const user = users.find(u => u.username === username.toLowerCase());
+            
+            if (user) {
+                return user;
+            }
+            
+            // Cek di addedUsers
+            const addedUser = addedUsers.find(u => u.username === username.toLowerCase());
+            if (addedUser) {
+                return addedUser;
+            }
+            
+            return null;
+        }
+
+        // Fungsi login
+        function login(username, password) {
+            // Cek user utama
+            let user = users.find(u => u.username === username.toLowerCase() && u.password === password);
+            
+            // Cek di addedUsers
+            if (!user) {
+                user = addedUsers.find(u => u.username === username.toLowerCase() && u.password === password);
+            }
+            
+            if (user) {
+                return user;
+            }
+            
+            return null;
+        }
+
+        // Fungsi untuk mengubah halaman
+        function changePage(pageId) {
+            // Sembunyikan semua halaman
+            pageContents.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Tampilkan halaman yang dipilih
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update menu aktif
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-page') === pageId.replace('Page', '')) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Fungsi untuk menampilkan dashboard
+        function showDashboard(user) {
+            currentUser = user;
+            
+            // Update informasi user
+            userName.textContent = user.displayName || user.username;
+            userRole.textContent = user.role;
+            userAvatar.textContent = (user.displayName || user.username).charAt(0).toUpperCase();
+            
+            // Update kelas role
+            userRole.className = 'user-role';
+            if (user.role === 'owner') {
+                userRole.classList.add('role-owner');
+            } else if (user.role === 'reseller') {
+                userRole.classList.add('role-reseller');
+            } else {
+                userRole.classList.add('role-member');
+            }
+            
+            // Tampilkan/ sembunyikan menu User Management berdasarkan role
+            if (user.role === 'reseller') {
+                userManagementMenu.style.display = 'flex';
+            } else {
+                userManagementMenu.style.display = 'none';
+                // Jika halaman user management aktif, ganti ke halaman bug
+                if (userManagementPage.classList.contains('active')) {
+                    changePage('bugPage');
+                }
+            }
+            
+            // Sembunyikan halaman login dan tampilkan dashboard
+            loginPage.style.display = 'none';
+            dashboard.style.display = 'block';
+            
+            // Reset form login
+            usernameInput.value = '';
+            passwordInput.value = '';
+            
+            // Tampilkan notifikasi login berhasil
+            showNotification(`Login berhasil! Selamat datang ${user.displayName || user.username}`, 'success');
+            
+            // Load daftar user jika reseller
+            if (user.role === 'reseller') {
+                loadUserList();
+            }
+        }
+
+        // Fungsi untuk menambahkan user baru (hanya untuk reseller)
+        function addNewUser(username, password, role) {
+            const newUser = {
+                username: username.toLowerCase(),
+                password: password,
+                role: role,
+                displayName: username,
+                addedBy: currentUser.username
+            };
+            
+            addedUsers.push(newUser);
+            
+            // Simpan ke localStorage
+            localStorage.setItem('addedUsers', JSON.stringify(addedUsers));
+            
+            // Load ulang daftar user
+            loadUserList();
+            
+            showNotification(`User ${username} berhasil ditambahkan dengan role ${role}`, 'success');
+        }
+
+        // Fungsi untuk memuat daftar user
+        function loadUserList() {
+            if (currentUser.role !== 'reseller') return;
+            
+            userList.innerHTML = '';
+            
+            // Tambahkan header
+            const header = document.createElement('div');
+            header.innerHTML = `
+                <h3 style="margin-bottom: 15px; color: var(--text);">Daftar User</h3>
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; padding: 10px; background-color: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 10px; font-weight: 600;">
+                    <div>Username</div>
+                    <div>Role</div>
+                    <div>Ditambahkan Oleh</div>
+                </div>
+            `;
+            userList.appendChild(header);
+            
+            // Tampilkan semua user yang ditambahkan oleh reseller ini
+            const filteredUsers = addedUsers.filter(user => user.addedBy === currentUser.username);
+            
+            if (filteredUsers.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.style.textAlign = 'center';
+                emptyMsg.style.padding = '20px';
+                emptyMsg.style.color = 'var(--text-secondary)';
+                emptyMsg.textContent = 'Belum ada user yang ditambahkan';
+                userList.appendChild(emptyMsg);
+            } else {
+                filteredUsers.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.style.display = 'grid';
+                    userItem.style.gridTemplateColumns = '2fr 1fr 1fr';
+                    userItem.style.gap = '10px';
+                    userItem.style.padding = '10px';
+                    userItem.style.borderBottom = '1px solid var(--border)';
+                    userItem.innerHTML = `
+                        <div>${user.username}</div>
+                        <div><span class="user-role ${user.role === 'reseller' ? 'role-reseller' : 'role-member'}" style="font-size: 0.7rem;">${user.role}</span></div>
+                        <div>${user.addedBy}</div>
+                    `;
+                    userList.appendChild(userItem);
+                });
+            }
+        }
+
+        // Event Listeners
+        loginButton.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            if (!username || !password) {
+                showNotification('Username dan password harus diisi!', 'error');
+                return;
+            }
+            
+            const user = login(username, password);
+            
+            if (user) {
+                showDashboard(user);
+            } else {
+                showNotification('Username atau password salah!', 'error');
+            }
+        });
+
+        // Enter key untuk login
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginButton.click();
+            }
+        });
+
+        // Menu item click
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.getAttribute('data-page');
+                changePage(`${page}Page`);
+            });
+        });
+
+        // Submit bug
+        submitBugButton.addEventListener('click', () => {
+            const phoneNumber = phoneNumberInput.value.trim();
+            const bugType = bugTypeSelect.value;
+            
+            if (!phoneNumber) {
+                showNotification('Nomor WhatsApp harus diisi!', 'error');
+                return;
+            }
+            
+            // Validasi nomor telepon
+            if (!/^[0-9]+$/.test(phoneNumber) || phoneNumber.length < 10) {
+                showNotification('Nomor WhatsApp tidak valid!', 'error');
+                return;
+            }
+            
+            // Simulasi pengiriman bug
+            const bugTypeNames = {
+                crash: 'Crash',
+                forclose: 'Forclose',
+                'xkill-android': 'Xkill Android',
+                'skill-ios': 'Skill iOS',
+                delay: 'Delay',
+                blank: 'Blank',
+                restart: 'Restart'
+            };
+            
+            showNotification(`Bug ${bugTypeNames[bugType]} dikirim ke nomor ${phoneNumber}`, 'success');
+            
+            // Reset form
+            phoneNumberInput.value = '';
+            bugTypeSelect.value = 'crash';
+        });
+
+        // Tambah user baru
+        addUserButton.addEventListener('click', () => {
+            if (currentUser.role !== 'reseller') {
+                showNotification('Hanya reseller yang bisa menambahkan user!', 'error');
+                return;
+            }
+            
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const newRole = document.getElementById('newRole').value;
+            
+            if (!newUsername || !newPassword) {
+                showNotification('Username dan password harus diisi!', 'error');
+                return;
+            }
+            
+            // Cek apakah username sudah ada
+            const allUsers = [...users, ...addedUsers];
+            if (allUsers.find(u => u.username === newUsername.toLowerCase())) {
+                showNotification('Username sudah digunakan!', 'error');
+                return;
+            }
+            
+            addNewUser(newUsername, newPassword, newRole);
+            
+            // Reset form
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('newRole').value = 'member';
+        });
+
+        // Load addedUsers dari localStorage saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUsers = localStorage.getItem('addedUsers');
+            if (savedUsers) {
+                addedUsers = JSON.parse(savedUsers);
+            }
+            
+            // Coba auto login untuk demo (hapus di produksi)
+            // Untuk demo, login otomatis sebagai rexx
+            // const demoUser = login('rexx', 'rexx123');
+            // if (demoUser) {
+            //     setTimeout(() => showDashboard(demoUser), 500);
+            // }
+        });
+
+        // Tambahkan beberapa contoh bug type dengan deskripsi
+        const bugTypeDescriptions = {
+            crash: 'Membuat WhatsApp crash/tertutup secara tiba-tiba',
+            forclose: 'Membuat WhatsApp force close berulang kali',
+            'xkill-android': 'Xkill khusus untuk perangkat Android',
+            'skill-ios': 'Skill khusus untuk perangkat iOS',
+            delay: 'Menunda pengiriman pesan',
+            blank: 'Membuat tampilan WhatsApp menjadi blank/kosong',
+            restart: 'Membuat WhatsApp restart terus menerus'
+        };
+
+        // Tampilkan deskripsi bug type saat dipilih
+        bugTypeSelect.addEventListener('change', function() {
+            const description = bugTypeDescriptions[this.value];
+            // Hapus deskripsi sebelumnya
+            const existingDesc = document.getElementById('bugTypeDesc');
+            if (existingDesc) existingDesc.remove();
+            
+            // Buat elemen deskripsi baru
+            const descElement = document.createElement('div');
+            descElement.id = 'bugTypeDesc';
+            descElement.style.marginTop = '10px';
+            descElement.style.color = 'var(--text-secondary)';
+            descElement.style.fontSize = '0.9rem';
+            descElement.style.fontStyle = 'italic';
+            descElement.textContent = description;
+            
+            // Tambahkan setelah select
+            this.parentNode.appendChild(descElement);
+        });
+
+        // Trigger event change untuk menampilkan deskripsi awal
+        bugTypeSelect.dispatchEvent(new Event('change'));
+    </script>
+</body>
+</html>
